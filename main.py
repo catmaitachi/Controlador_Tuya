@@ -1,11 +1,23 @@
+import json
+import os
 from tinytuya import BulbDevice
-import time
 import tkinter as tk
+
+# Carrega os dispositivos do arquivo snapshot.json
+
+def get_devices(path='snapshot.json'):
+
+    with open(path, 'r') as f:
+        data = json.load(f)
+
+    return data.get('devices', [])
 
 # Configurando a lâmpada inteligente
 
-bulb = BulbDevice('id', 'ip_address', 'local_key')
-bulb.set_version(3.5)
+devices = get_devices()
+
+bulb = BulbDevice(devices[1]['id'], devices[1]['ip'], devices[1]['key'])
+bulb.set_version(devices[1]['ver'])
 bulb.set_socketPersistent(True)
 
 # Funções de controle da lâmpada
